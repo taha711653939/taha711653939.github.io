@@ -33,7 +33,8 @@
             
             container.innerHTML = ""; // تنظيف الحاوية قبل البدء
 
-            for (let i = 0; i < 10i              const iframe = document.createElement('iframe');
+            for (let i = 0; i < 10; i++) {
+                const iframe = document.createElement('iframe');
                 iframe.src = embedUrl;
                 iframe.allow = "autoplay; encrypted-media";
                 container.appendChild(iframe);
