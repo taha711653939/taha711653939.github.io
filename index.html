@@ -2,94 +2,45 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدونتي المدارة عبر جيتهب</title>
+    <title>تشغيل الفيديوهات داخل الصفحة</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; }
-        header { text-align: center; padding: 20px; color: var(--primary); }
-        
-        /* تصميم البحث */
-        .search-box { margin-bottom: 30px; }
-        #searchInput { 
-            width: 100%; padding: 15px; border-radius: 25px; 
-            border: 2px solid #ddd; font-size: 16px; outline: none;
+        .video-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
         }
-
-        /* تصميم المقالات */
-        .article { 
-            background: white; padding: 20px; margin-bottom: 20px; 
-            border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        iframe {
+            width: 100%;
+            height: 150px;
+            border: none;
         }
-        .article h2 { color: var(--accent); margin-top: 0; }
-        .article p { color: #555; line-height: 1.6; }
-        .date { font-size: 0.8em; color: #999; border-top: 1px solid #eee; pt: 10px; display: block; }
     </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7320427020210313"
-     crossorigin="anonymous"></script>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>المقالات المنشورة 📝</h1>
-    </header>
-
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="🔍 ابحث عن عنوان أو كلمة في المقال...">
-    </div>
-
-    <div id="articlesList">
-        <p style="text-align:center;">جاري تحميل المقالات من جيتهب...</p>
-    </div>
-</div>
-
-<script>
-    // --- تعليمات هامة ---
-    // استبدل الرابط أدناه برابط الـ Raw الخاص بملفك articles.json
-    const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/username/repo/main/articles.json';
+    <h2>عرض الفيديو 100 مرة في شبكة واحدة</h2>
+    <button onclick="displayVideos()">ابدأ العرض الآن</button>
     
-    let allArticles = [];
+    <div id="container" class="video-container"></div>
 
-    // جلب البيانات
-    async function loadArticles() {
-        try {
-            const response = await fetch(GITHUB_RAW_URL);
-            allArticles = await response.json();
-            render(allArticles);
-        } catch (error) {
-            document.getElementById('articlesList').innerHTML = '❌ فشل في تحميل المقالات.';
+    <script>
+        function displayVideos() {
+            const container = document.getElementById('container');
+            // ملاحظة: روابط يوتيوب العادية لا تعمل داخل iframe، يجب تحويل الرابط إلى صيغة embed
+            const videoId = "6o4RAGf52wA"; 
+            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+            
+            container.innerHTML = ""; // تنظيف الحاوية قبل البدء
+
+            for (let i = 0; i < 100; i++) {
+                const iframe = document.createElement('iframe');
+                iframe.src = embedUrl;
+                iframe.allow = "autoplay; encrypted-media";
+                container.appendChild(iframe);
+            }
         }
-    }
+    </script>
 
-    // عرض المقالات
-    function render(data) {
-        const list = document.getElementById('articlesList');
-        list.innerHTML = data.length ? '' : '<p style="text-align:center;">لا توجد نتائج!</p>';
-        
-        data.forEach(item => {
-            list.innerHTML += `
-                <div class="article">
-                    <h2>${item.title}</h2>
-                    <p>${item.content}</p>
-                    <span class="date">📅 تاريخ النشر: ${item.date}</span>
-                </div>
-            `;
-        });
-    }
-
-    // نظام البحث
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = allArticles.filter(a => 
-            a.title.toLowerCase().includes(term) || 
-            a.content.toLowerCase().includes(term)
-        );
-        render(filtered);
-    });
-
-    loadArticles();
-</script>
 </body>
 </html>
