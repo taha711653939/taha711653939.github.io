@@ -2,45 +2,246 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تشغيل الفيديوهات داخل الصفحة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة المقالات الملكية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,700&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        .video-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-            margin-top: 20px;
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f3e5ab;
+            --dark-bg: #0f1014;
+            --panel-bg: #1a1b21;
+            --border-decoration: 2px solid var(--gold);
         }
-        iframe {
-            width: 100%;
-            height: 150px;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at 50% 50%, #2a2a2a 0%, #0f1014 100%);
+            color: var(--gold-light);
+            font-family: 'Amiri', serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* الحاوية الرئيسية المزخرفة */
+        .royal-card {
+            position: relative;
+            background: var(--panel-bg);
+            width: 90%;
+            max-width: 550px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid #333;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.2);
+            z-index: 1;
+        }
+
+        /* زخارف الزوايا (CSS Pure) */
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--gold);
+            transition: all 0.5s ease;
+        }
+        .top-right { top: 10px; right: 10px; border-bottom: none; border-left: none; }
+        .top-left { top: 10px; left: 10px; border-bottom: none; border-right: none; }
+        .bottom-right { bottom: 10px; right: 10px; border-top: none; border-left: none; }
+        .bottom-left { bottom: 10px; left: 10px; border-top: none; border-right: none; }
+
+        .royal-card:hover .corner { width: 95%; height: 95%; opacity: 0.1; }
+
+        h1 {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .decorative-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 20px auto;
+            width: 80%;
+        }
+
+        p { font-size: 1.2rem; line-height: 1.8; color: #ccc; margin-bottom: 30px; }
+
+        /* الزر الذهبي */
+        .btn-royal {
+            background: linear-gradient(45deg, #b8860b, #daa520, #ffd700, #b8860b);
+            background-size: 300% 300%;
+            color: #000;
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 12px 40px;
             border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(218, 165, 32, 0.4);
+            animation: shine 4s infinite linear;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
         }
+
+        .btn-royal:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(218, 165, 32, 0.8); }
+
+        @keyframes shine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* نافذة الباسوورد */
+        .modal-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex; justify-content: center; align-items: center;
+            visibility: hidden; opacity: 0;
+            transition: 0.4s;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+        .modal-bg.active { visibility: visible; opacity: 1; }
+
+        .modal-content {
+            background: #111;
+            border: 2px solid var(--gold);
+            padding: 40px;
+            width: 400px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.15);
+            transform: translateY(50px);
+            transition: 0.4s;
+        }
+        .modal-bg.active .modal-content { transform: translateY(0); }
+
+        .input-vip {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #555;
+            color: var(--gold);
+            font-size: 1.5rem;
+            text-align: center;
+            width: 100%;
+            margin: 20px 0;
+            padding: 10px;
+            outline: none;
+            font-family: sans-serif;
+            letter-spacing: 5px;
+        }
+        .input-vip:focus { border-bottom-color: var(--gold); }
+
+        .btn-verify {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 10px 30px;
+            font-family: 'Amiri', serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn-verify:hover { background: var(--gold); color: #000; }
+
+        .close-modal {
+            position: absolute; top: 10px; left: 15px;
+            color: #555; cursor: pointer; font-size: 1.5rem;
+        }
+        .close-modal:hover { color: var(--gold); }
+
+        #msg { margin-top: 15px; font-size: 0.9rem; }
+
     </style>
 </head>
 <body>
 
-    <h2>عرض الفيديو 100 مرة في شبكة واحدة</h2>
-    <button onclick="displayVideos()">ابدأ العرض الآن</button>
-    
-    <div id="container" class="video-container"></div>
+    <div class="royal-card">
+        <div class="corner top-right"></div>
+        <div class="corner top-left"></div>
+        <div class="corner bottom-right"></div>
+        <div class="corner bottom-left"></div>
+
+        <div style="font-size: 3rem; margin-bottom: 10px;">⚜️</div>
+        <h1>المقالة الحصرية</h1>
+        <div class="decorative-line"></div>
+        <p>
+            أهلاً بك في المنطقة الخاصة. هذه المقالة محمية بنظام تشفير ملكي. يرجى إدخال الرمز السري للمتابعة وإضافة المحتوى إلى الأرشيف.
+        </p>
+
+        <button class="btn-royal" onclick="openModal()">✦ إضافة المقالة ✦</button>
+    </div>
+
+    <div class="modal-bg" id="modalBg">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">✕</span>
+            <h3 style="color: var(--gold); margin-bottom: 15px;">بوابة التحقق</h3>
+            <p style="font-size: 0.9rem; color: #888;">كلمة المرور مطلوبة</p>
+            
+            <input type="password" id="passInput" class="input-vip" placeholder="••••••">
+            
+            <button class="btn-verify" onclick="verify()">تحقق ودخول</button>
+            <div id="msg"></div>
+        </div>
+    </div>
 
     <script>
-        function displayVideos() {
-            const container = document.getElementById('container');
-            // ملاحظة: روابط يوتيوب العادية لا تعمل داخل iframe، يجب تحويل الرابط إلى صيغة embed
-            const videoId = "6o4RAGf52wA"; 
-            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
-            
-            container.innerHTML = ""; // تنظيف الحاوية قبل البدء
+        const modal = document.getElementById('modalBg');
+        const passInput = document.getElementById('passInput');
+        const msg = document.getElementById('msg');
 
-            for (let i = 0; i < 10; i++) {
-                const iframe = document.createElement('iframe');
-                iframe.src = embedUrl;
-                iframe.allow = "autoplay; encrypted-media";
-                container.appendChild(iframe);
+        function openModal() {
+            modal.classList.add('active');
+            passInput.value = '';
+            msg.innerHTML = '';
+            passInput.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        function verify() {
+            // إضافة صوت نقرة (اختياري)
+            
+            if (passInput.value === 'taha7') {
+                msg.innerHTML = '<span style="color:#4caf50; text-shadow:0 0 5px #4caf50;">✔ الرمز صحيح. جاري التنفيذ...</span>';
+                
+                setTimeout(() => {
+                    closeModal();
+                    alert("👑 تم إضافة المقالة بنجاح، يا سيد طه!");
+                }, 1000);
+            } else {
+                msg.innerHTML = '<span style="color:#f44336;">✖ رمز الدخول خاطئ</span>';
+                // هز النافذة عند الخطأ
+                document.querySelector('.modal-content').animate([
+                    { transform: 'translateX(0)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(10px)' },
+                    { transform: 'translateX(0)' }
+                ], { duration: 300 });
             }
         }
-    </script>
 
+        // تفعيل زر Enter
+        passInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') verify();
+        });
+
+        // إغلاق عند النقر في الخارج
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+    </script>
 </body>
 </html>
